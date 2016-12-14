@@ -1,0 +1,383 @@
+<?php 
+function getUniqueVisitorCount($ip)
+{
+    //session_start();
+    if(!isset($_SESSION['current_user']))
+    {
+        $file = 'counter.txt';
+        if(!$data = @file_get_contents($file))
+        {
+            file_put_contents($file, base64_encode($ip));
+            //file_put_contents($file, $ip);
+            $_SESSION['visitor_count'] = 1;
+        }
+        else{
+            $decodedData = base64_decode($data);
+            //$decodedData = $data;
+            $ipList      = explode(';', $decodedData);
+
+            if(!in_array($ip, $ipList)){
+              array_push($ipList, $ip);
+              file_put_contents($file, base64_encode(implode(';', $ipList)));
+              //file_put_contents($file, implode(';', $ipList));
+            }
+            $_SESSION['visitor_count'] = count($ipList);
+        }
+        $_SESSION['current_user'] = $ip;
+    }      
+    
+}
+
+//require_once("utils.php");
+getUniqueVisitorCount($_SERVER['REMOTE_ADDR']);
+//echo $_SESSION['visitor_count'] . "~";
+$visitorCount = $_SESSION['visitor_count'];
+//session_destroy();
+$_SESSION = array();
+
+?>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Growth Trajectory</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <!-- <link href="css/bootstrap-theme.min.css" rel="stylesheet"> -->
+        <!--<link href="css/jumbotron.css" rel="stylesheet">-->
+        <link href="css/custom.css" rel="stylesheet">
+        
+        <link rel="shortcut icon" href="favicon.ico" />
+        
+        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>        
+    </head>
+    <body>
+        <div class="collapse" id="navbar-header">
+            <div class="container-fluid">
+                <!--<ul class="nav navbar-nav" style="padding-top: 0.5em;">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>-->
+                <ul class="nav navbar-nav" style="padding-top: 0.5em;">
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" >About</a>
+                        <span>The growth trajectory calculator is based on:<br />
+Landau-Crangle E, Rochow N, Fenton T, Liu K, Ali A, Fusch G, Marrin M, Fusch C. <u>Predicting Preterm Infants’ Individual Growth Trajectories Using an Innovative Growth Trajectory Calculator Tool.</u> CNPRM. Banff, 2016.<br />
+Fenton TR, Kim JH. <u>A systematic review and meta-analysis to revise the Fenton growth chart for preterm infants.</u> BMC Pediatr 2013;13:59.<br />
+de Onis M, Garza C, Victora CG, Onyango AW, Frongillo EA, Martines J. <u>The WHO Multicentre Growth Reference Study: planning, study design, and methodology.</u> Food Nutr Bull 2004;25:S15-26</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" >Contact</a>
+                        <span>For more information please contact: <a href="mailto:fusch@mcmaster.ca">fusch@mcmaster.ca</a></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <nav class="navbar navbar-static-top " style="border-radius:0;">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header">
+            &#9776; Growth Trajectory
+            </button>
+        </nav>
+        
+        <div class="col-xs-12 col-sm-12 col-md-4 col-md-offset-1" style="margin-bottom:2em;">
+        <div class="jumbotron" style="margin-bottom:0;">
+            <div class="container">
+                <label style="display:block; margin-bottom:0; font-weight: bold;">Sex:</label>
+                <div class="btn-group" data-toggle="buttons" id="selectSex">
+                    <label class="btn btn-primary-outline btn-sm active">
+                    <input type="radio" name="sex" id="sexOption1" value = "male" checked="checked"> Male
+                    </label>
+                    <label class="btn btn-primary-outline btn-sm">
+                    <input type="radio" name="sex" id="sexOption2" value = "female" > Female
+                    </label>              
+                </div>
+                <label style="display:block; margin-bottom:0; font-weight: bold;">Gestational Age - weeks:</label>            
+                
+                <div class="btn-group btn-group-sm" data-toggle="buttons" id="selectGestationalAge_weeks">
+                    <!--<div class="btn-group">-->
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_weeks" id="gestationalAge_weeks_option24" value="24" > 24
+                    </label>          
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_weeks" id="gestationalAge_weeks_option25" value="25" > 25
+                    </label>
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_weeks" id="gestationalAge_weeks_option26" value="26" > 26
+                    </label>
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_weeks" id="gestationalAge_weeks_option27" value="27" > 27
+                    </label>
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_weeks" id="gestationalAge_weeks_option28" value="28" > 28
+                    </label>
+                </div>
+                <br />
+                <div class="btn-group btn-group-sm" data-toggle="buttons" id="selectGestationalAge_weeks2">
+                    <label class="btn btn-primary-outline active">
+                    <input type="radio" name="gestationalAge_weeks" id="gestationalAge_weeks_option29" value="29" checked="checked"> 29
+                    </label>
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_weeks" id="gestationalAge_weeks_option30" value="30" > 30
+                    </label>          
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_weeks" id="gestationalAge_weeks_option31" value="31" > 31
+                    </label>
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_weeks" id="gestationalAge_weeks_option32" value="32" > 32
+                    </label>
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_weeks" id="gestationalAge_weeks_option33" value="33" > 33
+                    </label>
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_weeks" id="gestationalAge_weeks_option34" value="34" > 34
+                    </label>                            
+                    <!--</div>-->
+                </div>
+                <label style="display:block; margin-bottom:0; font-weight: bold;">Gestational Age - days:</label>
+                <div class="btn-group btn-group-sm" data-toggle="buttons" id="selectGestationalAge_days">
+                    <label class="btn btn-primary-outline active">
+                    <input type="radio" name="gestationalAge_days" id="gestationalAge_days_option0" value="0" checked="checked"> 0
+                    </label>
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_days" id="gestationalAge_days_option1" value="1" > 1
+                    </label>          
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_days" id="gestationalAge_days_option2" value="2" > 2
+                    </label>
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_days" id="gestationalAge_days_option3" value="3" > 3
+                    </label>
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_days" id="gestationalAge_days_option4" value="4" > 4
+                    </label>
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_days" id="gestationalAge_days_option5" value="5" > 5
+                    </label>   
+                    <label class="btn btn-primary-outline">
+                    <input type="radio" name="gestationalAge_days" id="gestationalAge_days_option6" value="6" > 6
+                    </label>                 
+                </div>
+                <label style="display:block; margin-bottom:0; font-weight: bold;">Birth Weight:</label>                            
+                <div class="input-group" style="width:7em;margin:0 auto;">              
+                    <input type="text" value="899" name="inputWeight" class="form-control">
+                    <span class="input-group-addon">g</span>
+                </div>
+                <label class="btn btn-primary btn-block" style="margin-top:2em;" id="drawChartBtn">
+                Draw Chart
+                </label>
+            </div>            
+        </div>
+        </div>
+        
+        <div class="col-xs-12 col-sm-12 col-md-7">
+        <div id="chartWithTitle">
+        <div id="chart_title"></div>
+        <div class="chartWithOverlay">
+
+            <div id="chart_div" style="margin: 0 auto;overflow:hidden;"> 
+            </div>
+
+            <div class="overlay" id="chart_title2">
+                <!--<div style="font-family:'Arial Black'; font-size: 128px;">88</div>
+                <div style="color: #b44; font-family:'Arial Black'; font-size: 32px; letter-spacing: .21em; margin-top:50px; margin-left:5px;">zombie</div>
+                <div style="color: #444; font-family:'Arial Black'; font-size: 32px; letter-spacing: .15em; margin-top:15px; margin-left:5px;">attacks</div>-->
+            </div>
+
+        </div>
+        </div>
+        <div id="chart_div2" style="margin: 0 auto;overflow:hidden;"></div>
+        
+        <label class="btn btn-primary btn-block" style="margin-top:2em;display:none;" onclick="openWin()" id="printChartBtn">
+            Open for printing
+        </label>
+        
+        </div>
+        
+        <div class="container-fluid col-xs-10 col-xs-offset-1">
+            <hr>
+            <footer>
+                <div>&copy; Fusch Research Group 2016                
+                <span style="float:right;">For more information please contact: <a href="mailto:fusch@mcmaster.ca">fusch@mcmaster.ca</a></span>
+                </div>
+                <div style="text-align:center;"><div style="display:inline-block;margin:0 auto;font-size:14px;" id="visitorCountDiv">Unique visitors: <?php echo $visitorCount; ?></div></div>
+            </footer>
+        </div>
+        
+        
+        
+               
+        <!-- Bootstrap core JavaScript
+            ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>    
+        <script src="js/tether.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="js/ie10-viewport-bug-workaround.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            $("#selectGestationalAge_weeks").change(function () {            
+                $('#selectGestationalAge_weeks2 label').each(function () {                 
+                    $(this).removeClass('active'); 
+                });
+            });
+            $("#selectGestationalAge_weeks2").change(function () {            
+                $('#selectGestationalAge_weeks label').each(function () {                 
+                    $(this).removeClass('active'); 
+                });
+            });
+            
+            function makePretty(x) {
+                if (Math.floor(x/10) == 1) {
+                    return x + 'th';
+                }
+                if ((x%10) == 1) {
+                    return x + 'st';
+                } else if ((x%10) == 2) {                    
+                    return x + 'nd';
+                } else if((x%10) == 3) {
+                    return x + 'rd';
+                } else {
+                    return x + 'th';
+                }
+            }
+            
+            function drawChart(sex, gestationalAge_weeks, gestationalAge_days, weight) {
+                var div = $('#chart_div');
+                var width = div.width();
+                if (width > 800) {
+                    div.css('width', 799);
+                    div.css('height', 810);
+                } else {
+                    div.css('height', width+10);
+                }
+                
+                /*for (i=0;i < 101;i++) {
+                    console.log(makePretty(i));
+                }*/
+            
+                var url = "getData.php?birthweight=" + weight + "&gestationalAge_weeks=" + gestationalAge_weeks + "&gestationalAge_days=" + gestationalAge_days + "&sex=" + sex ;
+                var jsonData = $.ajax({
+                  url: url,
+                  dataType: "json",
+                  async: false
+                }).responseText;
+                //console.log(jsonData);
+                //var visitorCount = jsonData.substring(0, jsonData.indexOf("~"));
+                //jsonData = jsonData.substring(jsonData.indexOf("~")+1);
+                //$('#visitorCountDiv').html(<?php getUniqueVisitorCount($_SERVER['REMOTE_ADDR']);?>);
+                
+                var percentile = jsonData.substring(0, jsonData.indexOf('<br />'));
+                //console.log(percentile);
+                jsonData = jsonData.substring(jsonData.indexOf('<br />')+6);
+                //console.log(jsonData);
+                jsonData=jsonData.replace(/\"\"/g, 'null');
+                
+                 //$('#chart_title2').html('<b>' + ((sex=='male') ? 'Male' : 'Female') + ', GA: ' + gestationalAge_weeks + ' + ' + gestationalAge_days + '/7 weeks<br /> BTW: ' + weight + "g, (" + makePretty(percentile) + ' %ile)</b>');
+                 $('#chart_title').html('<b>' + ((sex=='male') ? 'Male' : 'Female') + ': ' + gestationalAge_weeks + ' + ' + gestationalAge_days + '/7 weeks<br /> Birth Weight: ' + weight + "g (" + makePretty(percentile) + ' %ile)</b>');
+                
+                var data = new google.visualization.DataTable(jsonData);  
+            
+                var options = {
+                    /*chart: {
+                      title: 'Growth Trajectory',
+                      subtitle: ''
+                    },*/                    
+                    //title: '' + sex + ', GA: ' + gestationalAge_weeks + '+' + gestationalAge_days + ' weeks, BTW: ' + weight + "g, Birth percentile: " + percentile + '',
+                    tooltip: {isHtml: true},
+                    legend: 'none',
+                    interpolateNulls: true,
+                    chartArea: { width: "80%", height: "85%", left:"15%", bottom:"13%",
+                        backgroundColor: {
+                            stroke: '#000000',
+                            strokeWidth: 1
+                        }
+                    },
+                    vAxis: {
+                        title: 'Weight (g)',
+                        viewWindow:{ max:5500 },
+                        ticks: [0, 500,1000,1500,2000,2500,3000,3500,4000,4500,5000, 5500]
+                    },
+                    hAxis: {                    
+                        title: 'Gestational Age (weeks)',
+                        //viewWindow:{ min:23.429 },
+                        ticks: [24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44]
+                        //ticks:[{v:24, f:'24+0'}, {v:26, f:'26+0'}, {v:28, f:'28+0'}, {v:30, f:'30+0'}, {v:32, f:'32+0'}, {v:34, f:'34+0'}, {v:36, f:'36+0'}, {v:38, f:'38+0'}, {v:40, f:'40+0'}, {v:42, f:'42+0'}, {v:44, f:'44+0'}]                        
+                    },
+                    series: {
+            /*Fenton 3rd*/           0: { color: 'black', lineWidth: 1,  },
+            /*Fenton 10th*/          1: { color: 'black', lineWidth: 1 },
+            /*Fenton 50th*/          2: { color: 'black', lineWidth: 1 },
+            /*Fenton 90th*/          3: { color: 'black', lineWidth: 1 },
+            /*Fenton 97th*/          4: { color: 'black', lineWidth: 1 },
+            /*Trajectory 3rd*/       5: { color: 'black', lineWidth: 1 },
+            /*Trajectory 10th*/      6: { color: 'black', lineWidth: 1 },
+            /*Trajectory 50th*/      7: { color: 'black', lineWidth: 1 },
+            /*Trajectory 90th*/      8: { color: 'black', lineWidth: 1 },
+            /*Trajectory 97th*/      9: { color: 'black', lineWidth: 1 },
+            /*WHO 3rd*/              10: { color: 'black', lineWidth: 1 },
+            /*WHO 10th*/             11: { color: 'black', lineWidth: 1 },
+            /*WHO 50th*/             12: { color: 'black', lineWidth: 1 },
+            /*WHO 90th*/             13: { color: 'black', lineWidth: 1 },
+            /*WHO 97th*/             14: { color: 'black', lineWidth: 1 },
+            /*Infant calc*/          15: { color: 'red', lineWidth: 2 },
+            /*Infant calc lSD*/      16: { color: 'red', lineWidth: 1, lineDashStyle: [3, 3] },
+            /*Infant calc hSD*/      17: { color: 'red', lineWidth: 1, lineDashStyle: [3, 3]}
+                    }
+                };
+                var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                //var chart = new google.charts.Line(document.getElementById('chart_div'));
+            
+                
+                chart.draw(data, options);
+                //chart.draw(data, google.charts.Line.convertOptions(options));
+                
+                $('#printChartBtn').css("display", "block");
+                
+            }
+            function initialize () {
+                $('#drawChartBtn').click(function() {
+                    
+                    var sex = $("input[name=sex]:checked").val();                
+                    var gestationalAge_weeks = $("input[name=gestationalAge_weeks]:checked").val();
+                    var gestationalAge_days = $("input[name=gestationalAge_days]:checked").val();
+                    var weight = $("input[name=inputWeight]").val();
+                    
+                    //console.log("Sex: " + sex);                
+                    //console.log("Gestational Age - Weeks: " + gestationalAge_weeks);
+                    //console.log("Gestational Age - Days: " + gestationalAge_days);
+                    //console.log("Weight: " + weight);
+                    drawChart(sex, gestationalAge_weeks, gestationalAge_days, weight);
+                    
+                });
+            }
+            google.charts.setOnLoadCallback(initialize);                
+            google.charts.load('current', {'packages':['corechart']});
+            //google.charts.load('current', {'packages':['line']});
+            
+            function openWin() {
+                var divText = document.getElementById("chartWithTitle").outerHTML;
+                var myWindow = window.open('', '');
+                var doc = myWindow.document;    
+                doc.open();
+                doc.write('<html><head><title>Print it!</title><link href="css/bootstrap.min.css" rel="stylesheet"><link rel="stylesheet" type="text/css" href="css/custom.css"><link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css"></head><body>');
+                //doc.write(divText);
+                //doc.write($("#chartWithTitle").html());
+                doc.write(divText);
+                doc.write('</body></html>');
+                doc.close();
+            }
+        </script>
+    </body>
+</html>

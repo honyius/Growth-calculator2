@@ -1,0 +1,122 @@
+
+
+body{
+    -webkit-font-smoothing: antialiased; font-family: Roboto;
+}
+.jumbotron
+{
+    padding:1em 1em;
+}
+
+.btn-primary-outline 
+{
+    background-color:#fff;
+}
+#selectSex .btn-secondary.active/*, #selectSex .btn-secondary:hover*/
+{
+    color: #fff;
+    background-color: #0275d8;
+    border-color: #0275d8;
+}
+
+#selectGestationalAge_weeks .btn-secondary.active/*, #selectGestationalAge_weeks .btn-secondary:hover*/
+{
+    color: #fff;
+    background-color: #0275d8;
+    border-color: #0275d8;
+}
+
+.jumbotron {
+    text-align: center;
+}
+
+.navbar-nav .nav-item {
+    float: none; 
+}
+.nav-item a {
+    /*color: #eeecef;*/
+    color: #373a3c;
+    -webkit-font-smoothing: antialiased; font-family: Roboto;
+}
+/*
+.chartWithOverlay {
+    position: relative;
+    width: 700px;
+}*/
+
+.overlay {    
+    position: absolute;
+    top: 18%;  /* chartArea top  */
+    /*top: 9%;*/
+    left: 25%; /* chartArea left */
+    /*left: 25%; */
+    
+}
+
+.nav-item span {
+    font-size: 0.8em;
+    -webkit-font-smoothing: antialiased; font-family: Roboto;
+}
+
+/*
+#chart_title {
+    font-size:1.5em;
+    
+}*/
+
+#chart_title {
+    /*position:relative;
+    left:37%;*/   
+    text-align: center;    
+    -webkit-user-select: none; -webkit-font-smoothing: antialiased; font-family: Roboto;        
+}
+
+/* Extra small devices (phones, up to 480px) */
+@media screen and (max-width: 767px) {
+    #chart_title {
+        text-align:center;
+        -webkit-user-select: none; -webkit-font-smoothing: antialiased; font-family: Roboto;
+        
+    }
+    #chart_title2 {
+        font-size: 0.9em;
+    }
+}
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991px) {
+    #chart_title {
+        /*position:relative;
+        left:37%;*/   
+        text-align: center;    
+        -webkit-user-select: none; -webkit-font-smoothing: antialiased; font-family: Roboto;        
+    }
+    #chart_title2 {
+        font-size:1.2em;
+    }
+}
+/* tablets/desktops and up ----------- */
+@media (min-width: 992px) and (max-width: 1199px) {
+    #chart_title {
+        /*position:relative;
+        left:32%;  */
+        font-size:1.3em;   
+        text-align: center;
+        -webkit-user-select: none; -webkit-font-smoothing: antialiased; font-family: Roboto;
+    }
+    #chart_title2 {
+        font-size:1.3em;
+    }
+}
+/* large desktops and up ----------- */
+@media screen and (min-width: 1200px) {
+    #chart_title {
+        /*position:relative;
+        left:35%; */       
+        font-size:1.4em;    
+        text-align: center;
+        -webkit-user-select: none; -webkit-font-smoothing: antialiased; font-family: Roboto;
+    }
+    #chart_title2 {
+        font-size:1.4em;
+    }
+}
